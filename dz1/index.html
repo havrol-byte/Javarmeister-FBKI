@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Семь простых задач на JavaScript</title>
+  <style>
+    body { font: 16px/1.5 Arial, sans-serif; max-width: 850px; margin: 20px; }
+    input { width: 100px; }
+    button { padding: 5px 10px; }
+  </style>
+</head>
+<body>
+  <h1>Задачи на работу с числами</h1>
+  <p>Введите числа и нажмите кнопку. Решены семь заданий: 1.1, 1.2, 1.4, 1.5, 1.9, 1.10 и 1.15.</p>
+  <p>Это учебная версия с простым перебором. Диапазоны указаны рядом с полями. Под каждой задачей можно раскрыть объяснение.</p>
+
+  <h2>1.1. Взаимно простые числа</h2>
+  <form onsubmit="task1(); return false;">
+    <p><label>Число A (1–100 000): <input id="a1" type="number" min="1" max="100000" step="1" required value="14"></label></p>
+    <p><label>Число B (1–100 000): <input id="b1" type="number" min="1" max="100000" step="1" required value="25"></label></p>
+    <button type="submit">Проверить</button>
+  </form>
+  <p id="result1" aria-live="polite">Здесь будет ответ.</p>
+  <hr>
+
+  <h2>1.2. Проверка простого числа</h2>
+  <form onsubmit="task2(); return false;">
+    <label>Число N (1–100 000): <input id="n2" type="number" min="1" max="100000" step="1" required value="17"></label>
+    <button type="submit">Проверить</button>
+  </form>
+  <p id="result2" aria-live="polite">Здесь будет ответ.</p>
+  <hr>
+
+  <h2>1.4. Первые N простых чисел</h2>
+  <form onsubmit="task4(); return false;">
+    <label>Сколько чисел вывести (1–100): <input id="n4" type="number" min="1" max="100" step="1" required value="5"></label>
+    <button type="submit">Найти</button>
+  </form>
+  <p id="result4" aria-live="polite">Здесь будет ответ.</p>
+  <hr>
+
+  <h2>1.5. Все делители числа</h2>
+  <form onsubmit="task5(); return false;">
+    <label>Число N (1–100 000): <input id="n5" type="number" min="1" max="100000" step="1" required value="12"></label>
+    <button type="submit">Найти</button>
+  </form>
+  <p id="result5" aria-live="polite">Здесь будет ответ.</p>
+  <hr>
+
+  <h2>1.9. Проверка числа Фибоначчи</h2>
+  <form onsubmit="task9(); return false;">
+    <label>Число N (0–100 000): <input id="n9" type="number" min="0" max="100000" step="1" required value="21"></label>
+    <button type="submit">Проверить</button>
+  </form>
+  <p id="result9" aria-live="polite">Здесь будет ответ.</p>
+  <hr>
+
+  <h2>1.10. Двойной факториал</h2>
+  <form onsubmit="task10(); return false;">
+    <label>Число N (0–25): <input id="n10" type="number" min="0" max="25" step="1" required value="7"></label>
+    <button type="submit">Вычислить</button>
+  </form>
+  <p id="result10" aria-live="polite">Здесь будет ответ.</p>
+  <hr>
+
+  <h2>1.15. Числа, делящиеся на сумму своих цифр</h2>
+  <form onsubmit="task15(); return false;">
+    <p><label>Начало N (−100 000…100 000): <input id="n15" type="number" min="-100000" max="100000" step="1" required value="10"></label></p>
+    <p><label>Конец M (−100 000…100 000): <input id="m15" type="number" min="-100000" max="100000" step="1" required value="30"></label></p>
+    <button type="submit">Найти</button>
+  </form>
+  <p id="result15" aria-live="polite">Здесь будет ответ.</p>
+  <hr>
+
+<script>
+function task1() {
+  let a = Number(document.getElementById("a1").value);
+  let b = Number(document.getElementById("b1").value);
+  let nod = 1;
+
+  for (let i = 1; i <= a && i <= b; i = i + 1) {
+    if (a % i === 0 && b % i === 0) {
+      nod = i;
+    }
+  }
+
+  if (nod === 1) {
+    document.getElementById("result1").textContent = "Числа взаимно простые. НОД = 1.";
+  } else {
+    document.getElementById("result1").textContent = "Числа не взаимно простые. НОД = " + nod;
+  }
+}
+
+function task2() {
+  let n = Number(document.getElementById("n2").value);
+  let count = 0;
+
+  for (let i = 1; i <= n; i = i + 1) {
+    if (n % i === 0) {
+      count = count + 1;
+    }
+  }
+
+  if (count === 2) {
+    document.getElementById("result2").textContent = "Число простое.";
+  } else {
+    document.getElementById("result2").textContent = "Число не простое.";
+  }
+}
+
+function task4() {
+  let n = Number(document.getElementById("n4").value);
+  let number = 2;
+  let found = 0;
+  let answer = "";
+
+  while (found < n) {
+    let count = 0;
+
+    for (let i = 1; i <= number; i = i + 1) {
+      if (number % i === 0) {
+        count = count + 1;
+      }
+    }
+
+    if (count === 2) {
+      answer = answer + number + " ";
+      found = found + 1;
+    }
+
+    number = number + 1;
+  }
+
+  document.getElementById("result4").textContent = "Первые " + n + " простых чисел: " + answer;
+}
+
+function task5() {
+  let n = Number(document.getElementById("n5").value);
+  let answer = "";
+
+  for (let i = 1; i <= n; i = i + 1) {
+    if (n % i === 0) {
+      answer = answer + i + " ";
+    }
+  }
+
+  document.getElementById("result5").textContent = "Делители: " + answer;
+}
+
+function task9() {
+  let n = Number(document.getElementById("n9").value);
+  let a = 0;
+  let b = 1;
+
+  while (a < n) {
+    let next = a + b;
+    a = b;
+    b = next;
+  }
+
+  if (a === n) {
+    document.getElementById("result9").textContent = "Это число Фибоначчи.";
+  } else {
+    document.getElementById("result9").textContent = "Это не число Фибоначчи.";
+  }
+}
+
+function task10() {
+  let n = Number(document.getElementById("n10").value);
+  let result = 1;
+
+  for (let i = n; i > 1; i = i - 2) {
+    result = result * i;
+  }
+
+  document.getElementById("result10").textContent = n + "!! = " + result;
+}
+
+function task15() {
+  let n = Number(document.getElementById("n15").value);
+  let m = Number(document.getElementById("m15").value);
+  let answer = "";
+
+  if (n > m) {
+    document.getElementById("result15").textContent = "Начало N должно быть не больше конца M.";
+    return;
+  }
+
+  for (let i = n; i <= m; i = i + 1) {
+    let temp = Math.abs(i);
+    let sum = 0;
+
+    while (temp > 0) {
+      let digit = temp % 10;
+      sum = sum + digit;
+      temp = Math.floor(temp / 10);
+    }
+
+    if (sum > 0 && i % sum === 0) {
+      answer = answer + i + " ";
+    }
+  }
+
+  if (answer === "") {
+    document.getElementById("result15").textContent = "Подходящих чисел нет.";
+  } else {
+    document.getElementById("result15").textContent = "Подходящие числа: " + answer;
+  }
+}
+</script>
+</body>
+</html>
