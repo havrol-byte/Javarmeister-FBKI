@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Работа со структурами данных — задания 2.1–2.6</title>
+  <style>
+    body { font: 16px/1.5 Arial, sans-serif; max-width: 900px; margin: 20px; }
+    input { width: 230px; max-width: 90%; padding: 5px; }
+    pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+  </style>
+</head>
+<body>
+  <h1>Работа со структурами данных</h1>
+  <p>Задания 2.1–2.6 на JavaScript.</p>
+
+  <h2>2.1. Из kebab-case в camelCase</h2>
+  <form onsubmit="task1(); return false;">
+    <label>Строка: <input id="text1" value="background-color" required></label>
+    <button type="submit">Преобразовать</button>
+  </form>
+  <pre id="result1" aria-live="polite"></pre>
+  <hr>
+
+  <h2>2.2. Две копии массива и два способа переворота</h2>
+  <p>Исходный массив: [9,8,7,6,5,4,3,2,1]</p>
+  <button onclick="task2()">Показать три массива</button>
+  <pre id="result2" aria-live="polite"></pre>
+  <hr>
+
+  <h2>2.3. Перевод по словарю</h2>
+  <p>С русского на английский. Известны четыре записи: привет, спасибо, кот, доброе утро.</p>
+  <form onsubmit="task3(); return false;">
+    <label>Слово или фраза: <input id="text3" value="доброе утро" required></label>
+    <button type="submit">Перевести</button>
+  </form>
+  <pre id="result3" aria-live="polite"></pre>
+  <hr>
+
+  <h2>2.4. Объект с днями недели</h2>
+  <button onclick="task4()">Показать текущий день недели</button>
+  <pre id="result4" aria-live="polite"></pre>
+  <hr>
+
+  <h2>2.5. Персонал и его копия</h2>
+  <button onclick="task5()">Показать оба объекта</button>
+  <pre id="result5" aria-live="polite"></pre>
+  <hr>
+
+  <h2>2.6. Добавление и удаление предметов</h2>
+  <p>Добавьте или удалите предмет из списка.</p>
+  <label>Название предмета: <input id="text6" value="История" maxlength="80"></label>
+  <button onclick="addSubject()">Добавить</button>
+  <button onclick="removeSubject()">Удалить</button>
+  <pre id="result6" aria-live="polite"></pre>
+  <hr>
+
+<script>
+
+function camelCase(text) {
+  let words = text.split("-");
+  let answer = words[0];
+
+  for (let i = 1; i < words.length; i = i + 1) {
+    if (words[i] !== "") {
+      let firstLetter = words[i].at(0).toUpperCase();
+      let rest = words[i].slice(1);
+      answer = answer + firstLetter + rest;
+    }
+  }
+
+  return answer;
+}
+
+function task1() {
+  let text = document.getElementById("text1").value;
+  document.getElementById("result1").textContent = camelCase(text);
+}
+
+function task2() {
+  let original = [9, 8, 7, 6, 5, 4, 3, 2, 1];
+  let copy1 = original.slice();
+  let copy2 = [].concat(original);
+
+  copy1.reverse();
+
+  for (let i = 0; i < copy2.length / 2; i = i + 1) {
+    let last = copy2.length - 1 - i;
+    let temp = copy2[i];
+    copy2[i] = copy2[last];
+    copy2[last] = temp;
+  }
+
+  document.getElementById("result2").textContent =
+    "Исходный массив: " + JSON.stringify(original) + "\n" +
+    "Первая копия:   " + JSON.stringify(copy1) + "\n" +
+    "Вторая копия:   " + JSON.stringify(copy2);
+}
+
+let dictionary = {
+  "привет": "hello",
+  "спасибо": "thank you",
+  "кот": "cat",
+  "доброе утро": "good morning"
+};
+
+function translate(text) {
+  text = text.trim().toLowerCase();
+
+  if (Object.hasOwn(dictionary, text)) {
+    return dictionary[text];
+  }
+
+  return "Такого слова или фразы нет в словаре.";
+}
+
+function task3() {
+  let text = document.getElementById("text3").value;
+  document.getElementById("result3").textContent = translate(text);
+}
+
+let week = {
+  1: "Понедельник",
+  2: "Вторник",
+  3: "Среда",
+  4: "Четверг",
+  5: "Пятница",
+  6: "Суббота",
+  7: "Воскресенье",
+
+  currentDay: function() {
+    let date = new Date();
+    let number = date.getDay();
+
+    if (number === 0) {
+      number = 7;
+    }
+
+    document.getElementById("result4").textContent = "Сегодня: " + this[number];
+    return this[number];
+  }
+};
+
+function task4() {
+  week.currentDay();
+}
+
+function task5() {
+  let personnel = {
+    "Директор": "Анна",
+    "Бухгалтер": "Иван",
+    "Преподаватель": "Ольга"
+  };
+
+  let personnel2 = Object.assign({}, personnel);
+  personnel2["Директор"] = "Елена";
+  personnel2["Бухгалтер"] = "Павел";
+  personnel2["Преподаватель"] = "Мария";
+
+  document.getElementById("result5").textContent =
+    "Персонал:\n" + JSON.stringify(personnel, null, 2) + "\n\n" +
+    "Персонал 2:\n" + JSON.stringify(personnel2, null, 2);
+}
+
+let subjects = {
+  list: "Математика,Физика,Информатика",
+
+  add: function(name) {
+    name = name.trim();
+    if (name === "" || name.indexOf(",") !== -1) {
+      return "Введите одно название без запятой.";
+    }
+
+    let array = this.list.split(",");
+    if (this.list === "") {
+      array = [];
+    }
+    if (array.indexOf(name) === -1) {
+      array.push(name);
+      this.list = array.join(",");
+      return "Предмет добавлен.";
+    }
+
+    return "Такой предмет уже есть.";
+  },
+
+  remove: function(name) {
+    name = name.trim();
+    if (name === "" || name.indexOf(",") !== -1) {
+      return "Введите одно название без запятой.";
+    }
+    let array = this.list.split(",");
+    let index = array.indexOf(name);
+
+    if (index !== -1) {
+      array.splice(index, 1);
+      this.list = array.join(",");
+      return "Предмет удалён.";
+    }
+
+    return "Такого предмета нет.";
+  }
+};
+
+function addSubject() {
+  let name = document.getElementById("text6").value;
+  let message = subjects.add(name);
+  document.getElementById("result6").textContent = message + "\nПредметы: " + subjects.list;
+}
+
+function removeSubject() {
+  let name = document.getElementById("text6").value;
+  let message = subjects.remove(name);
+  document.getElementById("result6").textContent = message + "\nПредметы: " + subjects.list;
+}
+
+document.getElementById("result6").textContent = "Предметы: " + subjects.list;
+</script>
+</body>
+</html>
